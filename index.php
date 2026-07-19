@@ -8,4 +8,7 @@
 <body>
     <h1>BloomNest Florist</h1>
     <p>Welcome to the Home page!</p>
+    <form>
+        <button ahref="login.php">Login</button>
+    </form>
 </html>
