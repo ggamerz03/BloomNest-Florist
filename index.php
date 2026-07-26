@@ -11,6 +11,6 @@
     <button><a href="productList.php">View Products</a></button>
     <button><a href="shoppingCart.php">View Shopping Cart</a></button>
     <button><a href="login.php">Sign In</a></button>
-    <p>Don't have an account?<button><a href="signup.php">Sign Up</a></button></p>
+    <p>Don't have an account? <br> <button><a href="signup.php">Sign Up</a></button></p>
 </body>
 </html>
