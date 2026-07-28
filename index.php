@@ -8,7 +8,8 @@
 <body>
     <h1>Welcome to BloomNest Florist</h1>
     <p>Discover our beautiful selection of flowers and plants!</p>
-    <button><a href="productList.html">View Products</a></button>
-    <button><a href="shoppingCart.html">View Shopping Cart</a></button>
+    <button><a href="productList.php">View Products</a></button>
+    <button><a href="shoppingCart.php">View Shopping Cart</a></button>
+    <button><a href="login.php">Login</a></button>
 </body>
 </html>
