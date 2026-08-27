@@ -1,13 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
-</head>
-<body>
-    <h1>Login</h1>
+<?php
+require '../_base.php';
+//-----------------------------------------------------------------------------
+
+// ----------------------------------------------------------------------------
+$_title = 'Login';
+include '../_head.php';
+?>
     <form action="login.php" method="post">
+
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required><br><br>
         <label for="password">Password:</label>
@@ -19,5 +19,5 @@
         <input type="submit" value="Login">
         
     </form>
-</body>
-</html>
+<?php
+include '../_foot.php';
