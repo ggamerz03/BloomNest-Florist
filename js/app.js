@@ -18,7 +18,7 @@ $(() => {
     // Confirmation message
     $('[data-confirm]').on('click', e => {
         const text = e.target.dataset.confirm || 'Are you sure?';
-        if (!confirm(text)) { // not true=false -> user does not click OK
+        if (!confirm(text)) {
             e.preventDefault();
             e.stopImmediatePropagation();
         }
@@ -53,6 +53,24 @@ $(() => {
         const b = e.target.selectionEnd;
         e.target.value = e.target.value.toUpperCase();
         e.target.setSelectionRange(a, b);
+    });
+
+    // Photo preview
+    $('label.upload input[type=file]').on('change', e => {
+        const f = e.target.files[0];
+        const img = $(e.target).siblings('img')[0];
+
+        if (!img) return;
+
+        img.dataset.src ??= img.src;
+
+        if (f?.type.startsWith('image/')) {
+            img.src = URL.createObjectURL(f);
+        }
+        else {
+            img.src = img.dataset.src;
+            e.target.value = '';
+        }
     });
 
 });
