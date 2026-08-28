@@ -1,15 +1,15 @@
 <?php
-require '../_base.php';
+require '../../_base.php';
 //-----------------------------------------------------------------------------
 
 
 
 // ----------------------------------------------------------------------------
-$_title = 'Product Details';
-include '../_head.php';
+$_title = 'Order List';
+include '../../_head.php';
 ?>
 
 
 
 <?php
-include '../_foot.php';
+include '../../_foot.php';

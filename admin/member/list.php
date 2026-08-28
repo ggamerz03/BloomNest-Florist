@@ -1,12 +1,12 @@
 <?php
-require '../_base.php';
+require '../../_base.php';
 //-----------------------------------------------------------------------------
 
 
 
 // ----------------------------------------------------------------------------
 $_title = 'Member List';
-include '../_head.php';
+include '../../_head.php';
 ?>
 
 <form>
@@ -38,4 +38,4 @@ include '../_head.php';
 
 
 <?php
-include '../_foot.php';
+include '../../_foot.php';

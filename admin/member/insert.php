@@ -1,15 +1,15 @@
 <?php
-require '../_base.php';
+require '../../_base.php';
 //-----------------------------------------------------------------------------
 
 
 
 // ----------------------------------------------------------------------------
-$_title = 'Sign Up';
-include '../_head.php';
+$_title = 'Add new member';
+include '../../_head.php';
 ?>
 
 
 
 <?php
-include '../_foot.php';
+include '../../_foot.php';
