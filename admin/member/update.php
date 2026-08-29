@@ -6,29 +6,31 @@ include '../../_base.php';
 // Admin only
 auth('Admin');
 
+if (is_get()) {
+    $id = req('id');
+
+    $stm = $_db->prepare('SELECT * FROM user WHERE id = ?');
+    $stm->execute([$id]);
+    $u = $stm->fetch();
+
+    if (!$u) {
+        redirect('list.php');
+    }
+
+    extract((array)$u);
+    $_SESSION['profile_photo'] = $u->profile_photo;
+}
+
 if (is_post()) {
-    $email = req('email');
+    $id    = req('id');
     $name  = req('name');
     $phone = req('phone');
     $role  = req('role');
+    $profile_photo = $_SESSION['profile_photo'];
     $f = get_file('profile_photo');
 
-    // Validate: email
-    if (!$email) {
-        $_err['email'] = 'Required';
-    }
-    else if (strlen($email) > 100) {
-        $_err['email'] = 'Maximum 100 characters';
-    }
-    else if (!is_email($email)) {
-        $_err['email'] = 'Invalid email';
-    }
-    else if (!is_unique($email, 'user', 'email')) {
-        $_err['email'] = 'Duplicated';
-    }
-
     // Validate: name
-    if (!$name) {
+    if ($name == '') {
         $_err['name'] = 'Required';
     }
     else if (strlen($name) > 100) {
@@ -36,7 +38,7 @@ if (is_post()) {
     }
 
     // Validate: phone
-    if (!$phone) {
+    if ($phone == '') {
         $_err['phone'] = 'Required';
     }
     else if (strlen($phone) > 100) {
@@ -51,37 +53,42 @@ if (is_post()) {
         $_err['role'] = 'Required';
     }
 
-    // Validate: profile_photo (file)
-    if (!$f) {
-        $_err['profile_photo'] = 'Required';
-    }
-    else if (!str_starts_with($f->type, 'image/')) {
-        $_err['profile_photo'] = 'Must be image';
-    }
-    else if ($f->size > 1 * 1024 * 1024) {
-        $_err['profile_photo'] = 'Maximum 1MB';
+    // Validate: profile_photo (file) --> optional
+    if ($f) {
+        if (!str_starts_with($f->type, 'image/')) {
+            $_err['profile_photo'] = 'Must be image';
+        }
+        else if ($f->size > 1 * 1024 * 1024) {
+            $_err['profile_photo'] = 'Maximum 1MB';
+        }
     }
 
     // DB operation
     if (!$_err) {
-        // (1) Save photo
-        $profile_photo = save_photo($f, '../../photos');
+        // (1) Delete old photo and save new one --> optional
+        if ($f) {
+            if ($profile_photo && file_exists("../../photos/$profile_photo")) {
+                unlink("../../photos/$profile_photo");
+            }
+            $profile_photo = save_photo($f, '../../photos');
+        }
 
-        // (2) Insert user with a default password (123456, hashed)
+        // (2) Update user
         $stm = $_db->prepare('
-            INSERT INTO user (email, password, name, phone, profile_photo, role)
-            VALUES (?, SHA1(?), ?, ?, ?, ?)
+            UPDATE user
+            SET name = ?, phone = ?, role = ?, profile_photo = ?
+            WHERE id = ?
         ');
-        $stm->execute([$email, SHA1('123456'), $name, $phone, $profile_photo, $role]);
+        $stm->execute([$name, $phone, $role, $profile_photo, $id]);
 
-        temp('info', 'Record inserted. Default password: 123456');
+        temp('info', 'Record updated');
         redirect('list.php');
     }
 }
 
 // ----------------------------------------------------------------------------
 
-$_title = 'User | Insert';
+$_title = 'Member | Update';
 include '../../_head.php';
 ?>
 
@@ -90,9 +97,13 @@ include '../../_head.php';
 </p>
 
 <form method="post" class="form" enctype="multipart/form-data">
+    <label for="id">Id</label>
+    <b><?= $id ?></b>
+    <span></span>
+
     <label for="email">Email</label>
-    <?= html_text('email', 'maxlength="100"') ?>
-    <?= err('email') ?>
+    <?= html_text('email', 'readonly disabled') ?>
+    <span></span>
 
     <label for="name">Name</label>
     <?= html_text('name', 'maxlength="100"') ?>
@@ -103,18 +114,17 @@ include '../../_head.php';
     <?= err('phone') ?>
 
     <label for="role">Role</label>
-    <?= html_select('role', ['Member' => 'Member', 'Admin' => 'Admin'], null) ?>
+    <?= html_select('role', ['Admin' => 'Admin', 'Member' => 'Member'], null) ?>
     <?= err('role') ?>
 
     <label for="profile_photo">Photo</label>
     <label class="upload" tabindex="0">
         <?= html_file('profile_photo', 'image/*', 'hidden') ?>
-        <img src="/images/default_photo.jpg">
+        <img src="/photos/<?= $profile_photo ?>">
     </label>
     <?= err('profile_photo') ?>
 
     <section>
-        <p>Default password: <b>123456</b> (the user can change it after logging in)</p>
         <button>Submit</button>
         <button type="reset">Reset</button>
     </section>

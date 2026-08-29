@@ -39,14 +39,14 @@ footer {
     color: var(--sage-dark);
 }
 
-header { /* NEW */
+header {
     display: flex;
     gap: 10px;
     align-items: center;
 }
 
 header h1 {
-    flex: 1; /* NEW */
+    flex: 1;
     margin: 0;
     padding-left: 40px;
     font-family: 'Playfair Display', serif;
@@ -59,11 +59,11 @@ header a {
     text-decoration: none;
 }
 
-header div { /* NEW */
+header div {
     text-align: right;
 }
 
-header img { /* NEW */
+header img {
     width: 36px;
     height: 36px;
     border: 1px solid var(--rose);
@@ -88,7 +88,7 @@ nav a:hover {
     background: var(--rose-dark);
 }
 
-nav div { /* NEW */
+nav div {
     flex: 1;
 }
 
@@ -135,6 +135,11 @@ nav.pager a.active {
 
 .table tr:hover td {
     background: var(--rose-light);
+}
+
+/* Clickable rows (e.g. <tr data-get="detail.php?...">) */
+.table tr[data-get] {
+    cursor: pointer;
 }
 
 .table td:has(.popup) {
