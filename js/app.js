@@ -25,11 +25,7 @@ $(() => {
     });
 
     // Initiate GET request
-    // NOTE: delegated (bound on document) + stopPropagation so this also
-    // works when data-get is placed on a whole <tr> (clickable table row),
-    // without accidentally re-triggering when a button inside that row
-    // (e.g. Update/Delete) is clicked.
-    $(document).on('click', '[data-get]', e => {
+    $('[data-get]').on('click', e => {
         e.preventDefault();
         e.stopPropagation();
         const url = e.currentTarget.dataset.get;
@@ -37,7 +33,7 @@ $(() => {
     });
 
     // Initiate POST request
-    $(document).on('click', '[data-post]', e => {
+    $('[data-post]').on('click', e => {
         e.preventDefault();
         e.stopPropagation();
         const url = e.currentTarget.dataset.post;
@@ -77,6 +73,18 @@ $(() => {
             img.src = img.dataset.src;
             e.target.value = '';
         }
+    });
+
+    // Preserve scroll position across reloads on the same page
+    const _scrollKey = 'scroll:' + location.pathname;
+
+    const _savedScroll = sessionStorage.getItem(_scrollKey);
+    if (_savedScroll !== null) {
+        window.scrollTo(0, parseInt(_savedScroll));
+    }
+
+    $(window).on('scroll', () => {
+        sessionStorage.setItem(_scrollKey, window.scrollY);
     });
 
 });

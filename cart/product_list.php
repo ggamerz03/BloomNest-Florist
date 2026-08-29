@@ -48,11 +48,9 @@ $params = ["%$keyword%", "%$keyword%", $category_id, $category_id == ''];
 $p = new SimplePager($query, $params, 12, $page);
 $arr = $p->result;
 
-// Categories for the filter dropdown
 $categories = $_db->query('SELECT id, name FROM category ORDER BY name')
                    ->fetchAll(PDO::FETCH_KEY_PAIR);
 
-// Query string used to keep search/filter state on sort & pager links
 $qs = 'keyword=' . urlencode($keyword) . "&category_id=$category_id";
 
 // ----------------------------------------------------------------------------
@@ -108,18 +106,29 @@ include '../_head.php';
         border-top: 1px solid #ccc;
     }
 
-    .product .add-cart form {
+    .qty-stepper {
         display: flex;
         align-items: center;
-        gap: 6px;
+        justify-content: center;
+        gap: 10px;
     }
 
-    .product .add-cart select {
-        flex-grow: 1;
+    .qty-stepper form {
+        display: inline;
     }
 
-    .product .add-cart button {
-        width: 100%;
+    .qty-stepper button {
+        width: 30px;
+        height: 30px;
+        line-height: 1;
+        font-size: 1.1em;
+        border-radius: 4px;
+    }
+
+    .qty-stepper .qty-value {
+        min-width: 20px;
+        text-align: center;
+        font-weight: bold;
     }
 
     .sort-bar {
@@ -197,6 +206,7 @@ include '../_head.php';
         $cart = get_cart();
         $id   = $prod->id;
         $unit = $cart[$prod->id] ?? 0;
+        $max  = min(10, $prod->stock_qty);
         ?>
         <div class="product">
             <img src="/prod_photos/<?= $prod->photo ?>"
@@ -207,17 +217,27 @@ include '../_head.php';
                 <div class="price">RM <?= number_format($prod->unit_price, 2) ?></div>
                 <div class="stock">
                     <?= $prod->stock_qty > 0 ? "{$prod->stock_qty} in stock" : 'Out of stock' ?>
-                    <?= $unit ? ' | ✅ In cart' : '' ?>
                 </div>
             </div>
 
             <div class="add-cart">
                 <?php if ($prod->stock_qty > 0): ?>
                     <?php if ($_user): ?>
-                        <form method="post">
-                            <?= html_hidden('id') ?>
-                            <?= html_select('unit', $_units, '') ?>
-                        </form>
+                        <div class="qty-stepper">
+                            <form method="post">
+                                <?= html_hidden('id') ?>
+                                <input type="hidden" name="unit" value="<?= max(0, $unit - 1) ?>">
+                                <button type="submit" <?= $unit <= 0 ? 'disabled' : '' ?>>−</button>
+                            </form>
+
+                            <span class="qty-value"><?= $unit ?></span>
+
+                            <form method="post">
+                                <?= html_hidden('id') ?>
+                                <input type="hidden" name="unit" value="<?= min($max, $unit + 1) ?>">
+                                <button type="submit" <?= $unit >= $max ? 'disabled' : '' ?>>+</button>
+                            </form>
+                        </div>
                     <?php else: ?>
                         <form method="post">
                             <input type="hidden" name="id" value="<?= $prod->id ?>">
@@ -240,10 +260,6 @@ include '../_head.php';
 <br>
 
 <?= $p->html("sort=$sort&dir=$dir&$qs") ?>
-
-<script>
-    $('.add-cart select').on('change', e => e.target.form.submit());
-</script>
 
 <?php
 include '../_foot.php';

@@ -28,6 +28,30 @@ include '../_head.php';
 
 <style>
     #photo { display: block; border: 1px solid #333; width: 200px; height: 200px; object-fit: cover; }
+
+    .qty-stepper {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .qty-stepper form {
+        display: inline;
+    }
+
+    .qty-stepper button {
+        width: 30px;
+        height: 30px;
+        line-height: 1;
+        font-size: 1.1em;
+        border-radius: 4px;
+    }
+
+    .qty-stepper .qty-value {
+        min-width: 20px;
+        text-align: center;
+        font-weight: bold;
+    }
 </style>
 
 <p>
@@ -47,13 +71,28 @@ include '../_head.php';
             $cart = get_cart();
             $id   = $p->id;
             $unit = $cart[$p->id] ?? 0;
+            $max  = min(10, $p->stock_qty);
             ?>
             <?php if ($_user): ?>
-                <form method="post">
-                    <?= html_hidden('id') ?>
-                    <?= html_select('unit', $_units, '') ?>
-                    <?= $unit ? '✅' : '' ?>
-                </form>
+                <?php if ($p->stock_qty > 0): ?>
+                    <div class="qty-stepper">
+                        <form method="post">
+                            <?= html_hidden('id') ?>
+                            <input type="hidden" name="unit" value="<?= max(0, $unit - 1) ?>">
+                            <button type="submit" <?= $unit <= 0 ? 'disabled' : '' ?>>−</button>
+                        </form>
+
+                        <span class="qty-value"><?= $unit ?></span>
+
+                        <form method="post">
+                            <?= html_hidden('id') ?>
+                            <input type="hidden" name="unit" value="<?= min($max, $unit + 1) ?>">
+                            <button type="submit" <?= $unit >= $max ? 'disabled' : '' ?>>+</button>
+                        </form>
+                    </div>
+                <?php else: ?>
+                    Out of stock
+                <?php endif ?>
             <?php else: ?>
                 <form method="post">
                     <input type="hidden" name="id" value="<?= $p->id ?>">
@@ -71,10 +110,6 @@ include '../_head.php';
     <button data-get="cart.php">View Cart</button>
     <?php endif ?>
 </p>
-
-<script>
-    $('select').on('change', e => e.target.form.submit());
-</script>
 
 <?php
 include '../_foot.php';
