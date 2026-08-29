@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $_title ?? 'Untitled' ?> | BloomNest Florist</title>
-    <link rel="shortcut icon" href="/images/BloomNest LOGO.png">
+    <link rel="shortcut icon" href="/images/logo.png">
     <link rel="stylesheet" href="/css/app.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="/js/app.js"></script>
@@ -16,8 +16,8 @@
     <header>
         <h1>
             <a href="/">
-                <img src="/images/BloomNest LOGO.png" alt="BloomNest Florist Logo" width="200" height="100">
-                BloomNest Florist
+                <!-- <img src="/images/logo.png" alt="BloomNest Florist Logo" width="200" height="100"> -->
+                &nbsp;BloomNest Florist
             </a>
         </h1>
 
@@ -26,7 +26,7 @@
                 <?= encode($_user->name) ?><br>
                 <?= encode($_user->role) ?>
             </div>
-            <img src="/uploads/profiles/<?= encode($_user->profile_photo) ?>" alt="Photo" style="width:50px;height:50px;border-radius:50%;">
+            <img src="/photos/<?= encode($_user->profile_photo) ?>" alt="Photo" style="width:50px;height:50px;border-radius:50%;">
         <?php endif ?>
     </header>
 

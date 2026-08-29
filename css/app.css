@@ -51,7 +51,7 @@ header h1 {
     padding-left: 40px;
     font-family: 'Playfair Display', serif;
     color: var(--rose-dark);
-    background: url(/images/BloomNest\ logo.png) no-repeat left / 36px;
+    background: url(/images/logo.png) no-repeat left / 48px;
 }
 
 header a {
@@ -130,7 +130,7 @@ nav.pager a.active {
 
 .table th {
     color: #fff;
-    background: var(--sage-dark);
+    background: var(--sage);
 }
 
 .table tr:hover td {

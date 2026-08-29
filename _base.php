@@ -94,7 +94,7 @@ function is_email($value) {
 
 // Is phone number? (digits, spaces, dashes, optional leading +)
 function is_phone($value) {
-    return preg_match('/^\+?[0-9\- ]{7,20}$/', $value);
+    return preg_match('/^01[0-9]-\d{7,8}$/', $value);
 }
 
 // ============================================================================

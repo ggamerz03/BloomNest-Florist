@@ -3,16 +3,32 @@ include '../_base.php';
 
 // ----------------------------------------------------------------------------
 
-// Must come from forgot_password.php with a verified email in session
-$reset_email = $_SESSION['reset_email'] ?? null;
-
-if (!$reset_email) {
-    redirect('/auth/forgot_password.php');
-}
+// Authenticated users
+auth();
 
 if (is_post()) {
+    $password     = req('password');
     $new_password = req('new_password');
     $confirm      = req('confirm');
+
+    // Validate: password
+    if ($password == '') {
+        $_err['password'] = 'Required';
+    }
+    else if (strlen($password) < 5 || strlen($password) > 100) {
+        $_err['password'] = 'Between 5-100 characters';
+    }
+    else {
+        $stm = $_db->prepare('
+            SELECT COUNT(*) FROM user
+            WHERE password = SHA1(?) AND id = ?
+        ');
+        $stm->execute([$password, $_user->id]);
+
+        if ($stm->fetchColumn() == 0) {
+            $_err['password'] = 'Not matched';
+        }
+    }
 
     // Validate: new_password
     if ($new_password == '') {
@@ -35,13 +51,16 @@ if (is_post()) {
 
     // DB operation
     if (!$_err) {
-        $stm = $_db->prepare('UPDATE user SET password = SHA(?) WHERE email = ?');
-        $stm->execute([$new_password, $reset_email]);
+        // Update user (password)
+        $stm = $_db->prepare('
+            UPDATE user
+            SET password = SHA1(?)
+            WHERE id = ?
+        ');
+        $stm->execute([$new_password, $_user->id]);
 
-        unset($_SESSION['reset_email']);
-
-        temp('info', 'Password reset successfully. Please login.');
-        redirect('/auth/login.php');
+        temp('info', 'Password updated successfully');
+        redirect('/profile/profile.php');
     }
 }
 
@@ -51,19 +70,21 @@ $_title = 'Reset Password';
 include '../_head.php';
 ?>
 
-<p>Set a new password for <b><?= encode($reset_email) ?></b>.</p>
-
 <form method="post" class="form">
+    <label for="password">Current Password</label>
+    <?= html_password('password', 'maxlength="100"') ?>
+    <?= err('password') ?>
+
     <label for="new_password">New Password</label>
     <?= html_password('new_password', 'maxlength="100"') ?>
     <?= err('new_password') ?>
 
-    <label for="confirm">Confirm Password</label>
+    <label for="confirm">Confirm New Password</label>
     <?= html_password('confirm', 'maxlength="100"') ?>
     <?= err('confirm') ?>
 
     <section>
-        <button>Reset Password</button>
+        <button>Submit</button>
         <button type="reset">Reset</button>
     </section>
 </form>

@@ -59,8 +59,11 @@ if (is_post()) {
     else if (strlen($phone) > 100) {
         $_err['phone'] = 'Maximum 100 characters';
     }
+    else if (!is_phone($phone)) {
+        $_err['phone'] = 'Invalid phone number';
+    }
 
-    // Validate: photo (file)
+    // Validate: profile_photo (file)
     if (!$f) {
         $_err['profile_photo'] = 'Required';
     }
@@ -84,13 +87,13 @@ if (is_post()) {
         $stm->execute([$email, $password, $name, $phone, $profile_photo]);
 
         temp('info', 'Registration successful. Please login.');
-        redirect('/security/login.php');
+        redirect('/auth/login.php');
     }
 }
 
 // ----------------------------------------------------------------------------
 
-$_title = 'Register Member';
+$_title = 'Register';
 include '../_head.php';
 ?>
 
@@ -118,12 +121,12 @@ include '../_head.php';
     <label for="profile_photo">Photo</label>
     <label class="upload" tabindex="0">
         <?= html_file('profile_photo', 'image/*', 'hidden') ?>
-        <img src="/images/photo.jpg">
+        <img src="/images/default_photo.jpg">
     </label>
     <?= err('profile_photo') ?>
 
     <section>
-        <button>Submit</button>
+        <button>Register</button>
         <button type="reset">Reset</button>
     </section>
 </form>

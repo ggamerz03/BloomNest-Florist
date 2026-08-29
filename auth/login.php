@@ -34,7 +34,7 @@ if (is_post()) {
             login($u, '/'); 
         }
         else {
-            $_err['password'] = 'Not matched';
+            $_err['password'] = 'Email or password incorrect';
         }
     }
 }
@@ -59,6 +59,8 @@ include '../_head.php';
         <button type="reset">Reset</button>
     </section>
 </form>
+
+<p>Forgot your password? <a href="/auth/forgot_password.php">Click here</a></p>
 
 <?php
 include '../_foot.php';
