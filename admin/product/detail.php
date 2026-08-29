@@ -63,8 +63,8 @@ include '../../_head.php';
     <tr>
         <th>Photo</th>
         <td>
-            <img src="/photos/<?= $prod->photo ?>" alt="Photo"
-                 style="width:150px;height:150px;object-fit:cover;border:1px solid #333;">
+            <img src="/prod_photos/<?= $prod->photo ?>" alt="Photo"
+                 style="width:180px;height:180px;object-fit:cover;border:1px solid #333;">
         </td>
     </tr>
 </table>

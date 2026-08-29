@@ -14,7 +14,7 @@ $(() => {
     $('form :input:not(button):first').focus();
     $('.err:first').prev().focus();
     $('.err:first').prev().find(':input:first').focus();
-    
+
     // Confirmation message
     $('[data-confirm]').on('click', e => {
         const text = e.target.dataset.confirm || 'Are you sure?';
@@ -25,16 +25,22 @@ $(() => {
     });
 
     // Initiate GET request
-    $('[data-get]').on('click', e => {
+    // NOTE: delegated (bound on document) + stopPropagation so this also
+    // works when data-get is placed on a whole <tr> (clickable table row),
+    // without accidentally re-triggering when a button inside that row
+    // (e.g. Update/Delete) is clicked.
+    $(document).on('click', '[data-get]', e => {
         e.preventDefault();
-        const url = e.target.dataset.get;
+        e.stopPropagation();
+        const url = e.currentTarget.dataset.get;
         location = url || location;
     });
 
     // Initiate POST request
-    $('[data-post]').on('click', e => {
+    $(document).on('click', '[data-post]', e => {
         e.preventDefault();
-        const url = e.target.dataset.post;
+        e.stopPropagation();
+        const url = e.currentTarget.dataset.post;
         const f = $('<form>').appendTo(document.body)[0];
         f.method = 'POST';
         f.action = url || location;
