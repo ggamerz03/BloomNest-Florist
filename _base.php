@@ -97,6 +97,16 @@ function is_phone($value) {
     return preg_match('/^01[0-9]-\d{7,8}$/', $value);
 }
 
+// Return local root path
+function root($path = '') {
+    return "$_SERVER[DOCUMENT_ROOT]/$path";
+}
+
+// Return base url (host + port)
+function base($path = '') {
+    return "http://$_SERVER[SERVER_NAME]:$_SERVER[SERVER_PORT]/$path";
+}
+
 // ============================================================================
 // HTML Helpers
 // ============================================================================
@@ -109,6 +119,12 @@ function TODO() {
 // Encode HTML special characters
 function encode($value) {
     return htmlentities($value);
+}
+
+// Generate <input type='hidden'>
+function html_hidden($key, $attr = '') {
+    $value = encode($GLOBALS[$key] ?? '');
+    echo "<input type='hidden' id='$key' name='$key' value='$value' $attr>";
 }
 
 // Generate <input type='text'>
@@ -134,6 +150,19 @@ function html_number($key, $min = '', $max = '', $step = '', $attr = '') {
 function html_search($key, $attr = '') {
     $value = encode($GLOBALS[$key] ?? '');
     echo "<input type='search' id='$key' name='$key' value='$value' $attr>";
+}
+
+// Generate <textarea>
+function html_textarea($key, $attr = '') {
+    $value = encode($GLOBALS[$key] ?? '');
+    echo "<textarea id='$key' name='$key' $attr>$value</textarea>";
+}
+
+// Generate SINGLE <input type='checkbox'>
+function html_checkbox($key, $label = '', $attr = '') {
+    $value = encode($GLOBALS[$key] ?? '');
+    $status = $value == 1 ? 'checked' : '';
+    echo "<label><input type='checkbox' id='$key' name='$key' value='1' $status $attr>$label</label>";
 }
 
 // Generate <input type='radio'> list
@@ -249,12 +278,42 @@ function verify_password($password, $hash) {
 }
 
 // ============================================================================
+// Shopping Cart
+// ============================================================================
+
+// Get shopping cart
+function get_cart() {
+    return $_SESSION['cart'] ?? [];
+}
+
+// Set shopping cart
+function set_cart($cart = []) {
+    $_SESSION['cart'] = $cart;
+}
+
+// Update shopping cart
+function update_cart($id, $unit) {
+    $cart = get_cart();
+
+    if ($unit >= 1 && $unit <= 10 && is_exists($id, 'product', 'id')) {
+        $cart[$id] = $unit;
+        ksort($cart);
+    }
+    else {
+        unset($cart[$id]);
+    }
+
+    set_cart($cart);
+}
+
+// ============================================================================
 // Database Setups and Functions
 // ============================================================================
 
 // Global PDO object
 $_db = new PDO('mysql:dbname=bloomnest', 'root', '', [
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 ]);
 
 // Is unique?
@@ -276,3 +335,6 @@ function is_exists($value, $table, $field) {
 // ============================================================================
 // Global Constants and Variables
 // ============================================================================
+
+// Range 1-10 (used for quantity dropdown)
+$_units = array_combine(range(1, 10), range(1, 10));

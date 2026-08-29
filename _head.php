@@ -16,7 +16,6 @@
     <header>
         <h1>
             <a href="/">
-                <!-- <img src="/images/logo.png" alt="BloomNest Florist Logo" width="200" height="100"> -->
                 &nbsp;BloomNest Florist
             </a>
         </h1>
@@ -43,7 +42,15 @@
         <?php endif ?>
 
         <?php if ($_user?->role == 'Member'): ?>
-            <a href="/cart/product_list.php">Shopping Cart</a>
+            <a href="/cart/product_list.php">Shop</a>
+            <a href="/cart/cart.php">
+                Shopping Cart
+                <?php
+                    $cart = get_cart();
+                    $count = array_sum($cart);
+                    if ($count) echo "($count)";
+                ?>
+            </a>
             <a href="/order/history.php">Order History</a>
         <?php endif ?>
 
