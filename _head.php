@@ -29,20 +29,21 @@
         <?php endif ?>
     </header>
 
-    <nav>
+        <nav>
         <!-- Left side -->
-        <?php if (!$_user || $_user->role == 'Admin' || $_user->role == 'Member'): ?>
+        <?php if (!$_user): ?>
             <a href="/index.php">Home</a>
         <?php endif ?>
 
         <?php if ($_user?->role == 'Admin'): ?>
+            <a href="/index.php">Home</a>
             <a href="/admin/product/list.php">Product</a>
             <a href="/admin/member/list.php">Member</a>
             <a href="/admin/order/list.php">Order</a>
         <?php endif ?>
 
         <?php if ($_user?->role == 'Member'): ?>
-            <a href="/cart/product_list.php">Shop</a>
+            <a href="/cart/product_list.php">Home</a>
             <a href="/cart/cart.php">
                 Shopping Cart
                 <?php
