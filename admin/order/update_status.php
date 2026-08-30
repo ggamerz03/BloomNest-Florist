@@ -1,15 +1,18 @@
 <?php
-require '../../_base.php';
-//-----------------------------------------------------------------------------
-
-
+include '../../_base.php';
 
 // ----------------------------------------------------------------------------
-$_title = 'Update Order Status';
-include '../../_head.php';
-?>
 
+// Admin only
+auth('Admin');
 
+if (is_post()) {
+    $id = req('id');
 
-<?php
-include '../../_foot.php';
+    $stm = $_db->prepare("UPDATE orders SET status = 'Completed' WHERE id = ?");
+    $stm->execute([$id]);
+
+    temp('info', 'Order completed');
+}
+
+redirect('list.php');

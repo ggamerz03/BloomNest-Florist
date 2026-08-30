@@ -1,6 +1,20 @@
 <?php
 
 // ============================================================================
+// Load Environment Variables
+// ============================================================================
+
+$_env_path = __DIR__ . '/.env';
+if (file_exists($_env_path)) {
+    foreach (file($_env_path) as $line) {
+        $line = trim($line);
+        if ($line === '' || str_starts_with($line, '#')) continue;
+        [$key, $value] = explode('=', $line, 2);
+        putenv(trim($key) . '=' . trim($value));
+    }
+}
+
+// ============================================================================
 // PHP Setups
 // ============================================================================
 
@@ -304,6 +318,40 @@ function update_cart($id, $unit) {
     }
 
     set_cart($cart);
+}
+
+// ============================================================================
+// Delivery Address (stored on the user record)
+// ============================================================================
+
+// Does this user have a delivery address saved?
+function has_address($user) {
+    return $user && $user->address_line && $user->city && $user->state && $user->postcode;
+}
+
+// Format a user's address as a single line
+function format_address($user) {
+    return "$user->address_line, $user->city, $user->state $user->postcode";
+}
+
+// ============================================================================
+// Stripe Payment
+// ============================================================================
+
+define('STRIPE_SECRET_KEY', getenv('STRIPE_SECRET_KEY'));
+
+// Call the Stripe API
+function stripe_request($method, $endpoint, $data = []) {
+    $ch = curl_init("https://api.stripe.com/v1/$endpoint");
+    curl_setopt($ch, CURLOPT_USERPWD, STRIPE_SECRET_KEY . ':');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+    if ($data) {
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+    }
+    $response = curl_exec($ch);
+    curl_close($ch);
+    return json_decode($response);
 }
 
 // ============================================================================

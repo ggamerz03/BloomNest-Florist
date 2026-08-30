@@ -13,6 +13,14 @@
     <!-- Flash message -->
     <div id="info"><?= temp('info') ?></div>
 
+    <?php if ($_user?->role == 'Member' && !has_address($_user)): ?>
+    <div id="address-banner" style="background:#fff3cd;border:1px solid #ffeeba;padding:10px 15px;position:relative;">
+        You haven't added a delivery address yet.
+        <a href="/profile/address.php">Add one now</a>.
+        <span id="address-banner-close" style="position:absolute;right:15px;top:8px;cursor:pointer;font-weight:bold;">&times;</span>
+    </div>
+    <?php endif ?>
+
     <header>
         <h1>
             <a href="/">
@@ -29,7 +37,7 @@
         <?php endif ?>
     </header>
 
-        <nav>
+    <nav>
         <!-- Left side -->
         <?php if (!$_user): ?>
             <a href="/index.php">Home</a>
@@ -39,7 +47,14 @@
             <a href="/index.php">Home</a>
             <a href="/admin/product/list.php">Product</a>
             <a href="/admin/member/list.php">Member</a>
-            <a href="/admin/order/list.php">Order</a>
+            <a href="/admin/order/list.php">
+                Order
+                <?php
+                    $stm = $_db->query("SELECT COUNT(*) FROM orders WHERE status = 'To Ship'");
+                    $pending = $stm->fetchColumn();
+                    if ($pending) echo "($pending)";
+                ?>
+            </a>
         <?php endif ?>
 
         <?php if ($_user?->role == 'Member'): ?>
