@@ -1,11 +1,10 @@
 <?php
 // Pre-fill the WhatsApp chat with a starter message
-$_wa_number  = '601120111961'; // TODO: replace with BloomNest's real WhatsApp number
+$_wa_number  = '60123456789';
 $_wa_message = urlencode("Hi, I'm interested in your flower arrangements. Could you share more details?");
 
 // Store address used for the Google Maps search link
 $_store_address = urlencode('BloomNest Florist, Jalan Genting Kelang, 53300 Kuala Lumpur, Federal Territory of Kuala Lumpur');
-// TODO: replace with BloomNest's real store address
 ?>
     </main>
 

@@ -64,9 +64,9 @@ include '../_head.php';
 </table>
 
 <p>
-    <button data-get="product_list.php">List</button>
+    <button data-get="product_list.php">Back to List</button>
     <?php if ($_user): ?>
-    <button data-get="cart.php">View Cart</button>
+        <button data-get="cart.php">View Cart</button>
     <?php endif ?>
 </p>
 

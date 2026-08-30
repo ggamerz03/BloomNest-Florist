@@ -38,6 +38,7 @@ include '../_head.php';
     <?= err('email') ?>
 
     <section>
+        <button type="button" data-get="/auth/login.php"">Back</button>
         <button>Next</button>
         <button type="reset">Reset</button>
     </section>

@@ -39,11 +39,14 @@ $stm = $_db->prepare('INSERT INTO orders (user_id, order_date, delivery_address,
 $stm->execute([$_user->id, format_address($_user), $subtotal, $delivery_fee, $total, 'To Ship', $session_id]);
 $order_id = $_db->lastInsertId();
 
-$stm = $_db->prepare('INSERT INTO order_item (order_id, product_id, unit_price, qty, subtotal)
-                       VALUES (?, ?, ?, ?, ?)');
+$stm_item  = $_db->prepare('INSERT INTO order_item (order_id, product_id, unit_price, qty, subtotal)
+                             VALUES (?, ?, ?, ?, ?)');
+$stm_stock = $_db->prepare('UPDATE product SET stock_qty = stock_qty - ? WHERE id = ?');
+
 foreach ($products as $p) {
     $qty = $cart[$p->id];
-    $stm->execute([$order_id, $p->id, $p->unit_price, $qty, $p->unit_price * $qty]);
+    $stm_item->execute([$order_id, $p->id, $p->unit_price, $qty, $p->unit_price * $qty]);
+    $stm_stock->execute([$qty, $p->id]);
 }
 
 set_cart([]);

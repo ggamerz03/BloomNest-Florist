@@ -55,6 +55,7 @@ include '../_head.php';
     <?= err('password') ?>
 
     <section>
+        <button type="button" data-get="/cart/product_list.php"">Back to Home</button>
         <button>Login</button>
         <button type="reset">Reset</button>
     </section>

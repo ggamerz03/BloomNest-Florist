@@ -63,7 +63,8 @@ include '../_head.php';
     <?= err('confirm') ?>
 
     <section>
-        <button>Reset Password</button>
+        <button type="button" data-get="/auth/login.php"">Cancel</button>
+        <button>Submit</button>
         <button type="reset">Reset</button>
     </section>
 </form>

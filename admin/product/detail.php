@@ -70,8 +70,8 @@ include '../../_head.php';
 </table>
 
 <p>
-    <button data-get="update.php?id=<?= $prod->id ?>">Update</button>
     <button data-get="list.php">Back to List</button>
+    <button data-get="update.php?id=<?= $prod->id ?>">Update</button>
 </p>
 
 <?php

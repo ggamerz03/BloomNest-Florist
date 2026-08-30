@@ -12,18 +12,18 @@ $category_id = req('category_id', '');
 
 // (2) Sorting
 $fields = [
-    'category_id' => 'Category',
-    'id'          => 'Id',
-    'name'        => 'Name',
-    'color'       => 'Color',
-    'description' => 'Description',
-    'unit_price'  => 'Unit Price',
-    'stock_qty'   => 'Stock Qty',
-    'status'      => 'Status',
+    'p.category_id' => 'Category',
+    'p.id'          => 'Id',
+    'p.name'        => 'Name',
+    'p.color'       => 'Color',
+    'p.description' => 'Description',
+    'p.unit_price'  => 'Unit Price',
+    'p.stock_qty'   => 'Stock Qty',
+    'p.status'      => 'Status',
 ];
 
 $sort = req('sort');
-key_exists($sort, $fields) || $sort = 'id';
+key_exists($sort, $fields) || $sort = 'p.id';
 
 $dir = req('dir');
 in_array($dir, ['asc', 'desc']) || $dir = 'asc';
@@ -36,9 +36,10 @@ require_once '../../lib/SimplePager.php';
 // Categories for the filter dropdown (id => name)
 $categories = $_db->query('SELECT id, name FROM category ORDER BY name')->fetchAll(PDO::FETCH_KEY_PAIR);
 
-$query = "SELECT * FROM product
-          WHERE (name LIKE ? OR id LIKE ?)
-          AND (category_id = ? OR ?)
+$query = "SELECT p.*, c.name AS category_name FROM product p
+          JOIN category c ON p.category_id = c.id
+          WHERE (p.name LIKE ? OR p.id LIKE ?)
+          AND (p.category_id = ? OR ?)
           ORDER BY $sort $dir";
 
 $params = ["%$keyword%", "%$keyword%", $category_id, $category_id == ''];
@@ -97,17 +98,16 @@ include '../../_head.php';
 
     <?php foreach ($arr as $row): ?>
     <tr data-get="detail.php?id=<?= $row->id ?>">
-        <!-- <td><?= $row->category_id ?></td> -->
+        <td><?= encode($row->category_name) ?></td>
         <td><?= $row->id ?></td>
-        <td><?= $row->name ?></td>
-        <td><?= $row->color ?></td>
-        <td><?= $row->description ?></td>
+        <td><?= encode($row->name) ?></td>
+        <td><?= encode($row->color) ?></td>
+        <td><?= encode($row->description) ?></td>
         <td><?= number_format($row->unit_price, 2) ?></td>
         <td><?= $row->stock_qty ?></td>
-        <td><?= $row->status ?></td>
+        <td><?= encode($row->status) ?></td>
         <td>
             <button data-get="update.php?id=<?= $row->id ?>">Update</button>
-            <button data-post="delete.php?id=<?= $row->id ?>" data-confirm="Delete this product?">Delete</button>
             <img src="/prod_photos/<?= $row->photo ?>" class="popup">
         </td>
     </tr>

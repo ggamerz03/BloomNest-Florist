@@ -114,7 +114,7 @@ include '../_head.php';
     <?= html_text('name', 'maxlength="100"') ?>
     <?= err('name') ?>
 
-    <label for="phone">Phone</label>
+    <label for="phone">Phone No.</label>
     <?= html_text('phone', 'maxlength="100"') ?>
     <?= err('phone') ?>
 
@@ -126,6 +126,7 @@ include '../_head.php';
     <?= err('profile_photo') ?>
 
     <section>
+        <button type="button" data-get="/cart/product_list.php">Back to Home</button>
         <button>Register</button>
         <button type="reset">Reset</button>
     </section>

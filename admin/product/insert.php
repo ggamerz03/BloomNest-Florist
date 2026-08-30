@@ -142,7 +142,7 @@ include '../../_head.php';
     <?= err('description') ?>
 
     <label for="unit_price">Unit Price</label>
-    <?= html_number('unit_price', 0.01, 9999.99, 0.10) ?>
+    <?= html_number('unit_price', 0.01, 9999.99, 0.01) ?>
     <?= err('unit_price') ?>
 
     <label for="stock_qty">Stock Qty</label>

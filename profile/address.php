@@ -55,8 +55,9 @@ include '../_head.php';
     <?= err('postcode') ?>
 
     <section>
+        <button type="button" data-get="/cart/checkout.php">Cancel</button>
         <button>Save</button>
-        <button type="reset" data-get="profile.php">Cancel</button>
+        <button type="reset">Reset</button>
     </section>
 </form>
 

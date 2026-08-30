@@ -62,6 +62,7 @@ include '../_head.php';
     <?= encode(format_address($_user)) ?>
 </p>
 <p>
+    <button type="button" data-get="cart.php">Cancel</button>
     <button data-get="/profile/address.php">Change Address</button>
 </p>
 

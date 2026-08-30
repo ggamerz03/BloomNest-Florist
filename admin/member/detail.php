@@ -53,9 +53,9 @@ include '../../_head.php';
 </table>
 
 <p>
-    <button data-get="update.php?id=<?= $u->id ?>">Update</button>
-    <button data-get="delete.php?id=<?= $u->id ?>">Delete</button>
     <button data-get="list.php">Back to List</button>
+    <button data-get="update.php?id=<?= $u->id ?>">Update</button>
+    <button data-post="delete.php?id=<?= $u->id ?>" data-confirm="Delete this user?">Delete</button>
 </p>
 
 <?php

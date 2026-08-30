@@ -85,10 +85,6 @@ $_title = 'User | Insert';
 include '../../_head.php';
 ?>
 
-<p>
-    <button data-get="list.php">Back to List</button>
-</p>
-
 <form method="post" class="form" enctype="multipart/form-data">
     <label for="email">Email</label>
     <?= html_text('email', 'maxlength="100"') ?>
@@ -115,6 +111,7 @@ include '../../_head.php';
 
     <section>
         <p>Default password: <b>123456</b> (the user can change it after logging in)</p>
+        <button data-get="list.php">Back to List</button>
         <button>Submit</button>
         <button type="reset">Reset</button>
     </section>

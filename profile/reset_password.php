@@ -84,6 +84,7 @@ include '../_head.php';
     <?= err('confirm') ?>
 
     <section>
+        <button type="button" data-get="/profile/profile.php"">Back</button>
         <button>Submit</button>
         <button type="reset">Reset</button>
     </section>

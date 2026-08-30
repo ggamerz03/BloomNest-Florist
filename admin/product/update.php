@@ -126,10 +126,6 @@ $_title = 'Product | Update';
 include '../../_head.php';
 ?>
 
-<p>
-    <button data-get="list.php">Back to List</button>
-</p>
-
 <form method="post" class="form" enctype="multipart/form-data">
     <label for="id">Id</label>
     <b><?= $id ?></b>
@@ -171,7 +167,8 @@ include '../../_head.php';
     <?= err('photo') ?>
 
     <section>
-        <button>Submit</button>
+        <button type="button" data-get="list.php">Cancel</button>
+        <button>Save Changes</button>
         <button type="reset">Reset</button>
     </section>
 </form>

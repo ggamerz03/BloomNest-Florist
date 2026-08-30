@@ -33,6 +33,21 @@ include '../_head.php';
         <th>Phone No.</th>
         <td><?= encode($u->phone) ?></td>
     </tr>
+    
+    <?php if ($u->role == 'Member'): ?>
+    <tr>
+        <th>Delivery Address</th>
+        <td>
+            <?php if ($u->address_line): ?>
+                <?= encode($u->address_line) ?><br>
+                <?= encode($u->city) ?>, <?= encode($u->state) ?> <?= encode($u->postcode) ?>
+            <?php else: ?>
+                <i>Not set</i>
+            <?php endif ?>
+        </td>
+    </tr>
+    <?php endif ?>
+
     <tr>
         <th>Photo</th>
         <td>
@@ -43,8 +58,8 @@ include '../_head.php';
 </table>
 
 <section>
-    <button data-get="/profile/update_profile.php">Update Profile</button>
     <button data-get="/">Back to Home</button>
+    <button data-get="/profile/update_profile.php">Update Profile</button>
 </section>
 
 <?php

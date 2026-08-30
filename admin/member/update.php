@@ -92,10 +92,6 @@ $_title = 'Member | Update';
 include '../../_head.php';
 ?>
 
-<p>
-    <button data-get="list.php">Back to List</button>
-</p>
-
 <form method="post" class="form" enctype="multipart/form-data">
     <label for="id">Id</label>
     <b><?= $id ?></b>
@@ -125,7 +121,8 @@ include '../../_head.php';
     <?= err('profile_photo') ?>
 
     <section>
-        <button>Submit</button>
+        <button type="button" data-get="detail.php">Cancel</button>
+        <button>Save Changes</button>
         <button type="reset">Reset</button>
     </section>
 </form>
