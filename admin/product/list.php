@@ -9,6 +9,7 @@ auth('Admin');
 // (1) Search & Filter
 $keyword     = req('keyword', '');
 $category_id = req('category_id', '');
+$stock       = req('stock', '');
 
 // (2) Sorting
 $fields = [
@@ -40,15 +41,20 @@ $query = "SELECT p.*, c.name AS category_name FROM product p
           JOIN category c ON p.category_id = c.id
           WHERE (p.name LIKE ? OR p.id LIKE ?)
           AND (p.category_id = ? OR ?)
+          AND (
+              ? = ''
+              OR (? = 'in' AND p.stock_qty > 0)
+              OR (? = 'out' AND p.stock_qty <= 0)
+          )
           ORDER BY $sort $dir";
 
-$params = ["%$keyword%", "%$keyword%", $category_id, $category_id == ''];
+$params = ["%$keyword%", "%$keyword%", $category_id, $category_id == '', $stock, $stock, $stock];
 
 $p = new SimplePager($query, $params, 10, $page);
 $arr = $p->result;
 
 // Query string used to keep the current search/filter state on sort & pager links
-$qs = 'keyword=' . urlencode($keyword) . "&category_id=$category_id";
+$qs = 'keyword=' . urlencode($keyword) . "&category_id=$category_id&stock=$stock";
 
 // ----------------------------------------------------------------------------
 
@@ -75,6 +81,10 @@ include '../../_head.php';
 
     <label for="category_id">Category</label>
     <?= html_select('category_id', $categories, 'All') ?>
+    <span></span>
+
+    <label for="stock">Stock</label>
+    <?= html_select('stock', ['in' => 'In Stock', 'out' => 'Out of Stock'], 'All') ?>
     <span></span>
 
     <input type="hidden" name="sort" value="<?= $sort ?>">
@@ -105,7 +115,7 @@ include '../../_head.php';
         <td><?= encode($row->description) ?></td>
         <td><?= number_format($row->unit_price, 2) ?></td>
         <td><?= $row->stock_qty ?></td>
-        <td><?= encode($row->status) ?></td>
+        <td><?= $row->stock_qty > 0 ? 'In Stock' : 'Out of Stock' ?></td>
         <td>
             <button data-get="update.php?id=<?= $row->id ?>">Update</button>
             <img src="/prod_photos/<?= $row->photo ?>" class="popup">

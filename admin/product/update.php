@@ -103,7 +103,7 @@ if (is_post()) {
         // Delete old photo + save new one --> optional
         if ($f) {
             if ($photo && file_exists("../../prod_photos/$photo")) {
-                unlink("../../photos/$photo");
+                unlink("../../prod_photos/$photo");
             }
             $photo = save_photo($f, '../../prod_photos');
         }
@@ -162,7 +162,7 @@ include '../../_head.php';
     <label for="photo">Photo</label>
     <label class="upload" tabindex="0">
         <?= html_file('photo', 'image/*', 'hidden') ?>
-        <img src="/photos/<?= $photo ?>">
+        <img src="/prod_photos/<?= $photo ?>">
     </label>
     <?= err('photo') ?>
 

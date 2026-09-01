@@ -31,7 +31,7 @@ if (is_post()) {
 
         if ($u) {
             temp('info', 'Login successfully');
-            login($u, '/'); 
+            login($u, '/');
         }
         else {
             $_err['password'] = 'Email or password incorrect';
@@ -55,7 +55,7 @@ include '../_head.php';
     <?= err('password') ?>
 
     <section>
-        <button type="button" data-get="/cart/product_list.php"">Back to Home</button>
+        <button type="button" data-get="/cart/product_list.php">Back to Home</button>
         <button>Login</button>
         <button type="reset">Reset</button>
     </section>
