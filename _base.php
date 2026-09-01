@@ -321,6 +321,32 @@ function update_cart($id, $unit) {
 }
 
 // ============================================================================
+// Low Stock Alert
+// ============================================================================
+
+// Products with 0 < stock_qty <= this value are flagged as "Low Stock".
+// Adjust this single number to change the threshold everywhere.
+define('LOW_STOCK_THRESHOLD', 10);
+
+// Returns 'out' | 'low' | 'ok' based on stock quantity
+function stock_status($qty) {
+    if ($qty <= 0) return 'out';
+    if ($qty <= LOW_STOCK_THRESHOLD) return 'low';
+    return 'ok';
+}
+
+// Echo a small colored stock badge, e.g. <span class="badge badge-low">Low Stock (6 left)</span>
+function stock_badge($qty) {
+    $status = stock_status($qty);
+    $label = [
+        'out' => 'Out of Stock',
+        'low' => "Low Stock ($qty left)",
+        'ok'  => 'In Stock',
+    ][$status];
+    echo "<span class='badge badge-$status'>$label</span>";
+}
+
+// ============================================================================
 // Delivery Address (stored on the user record)
 // ============================================================================
 

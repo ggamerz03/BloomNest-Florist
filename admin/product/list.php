@@ -37,24 +37,40 @@ require_once '../../lib/SimplePager.php';
 // Categories for the filter dropdown (id => name)
 $categories = $_db->query('SELECT id, name FROM category ORDER BY name')->fetchAll(PDO::FETCH_KEY_PAIR);
 
+// 'in'  = healthy stock (above the low-stock threshold)
+// 'low' = 0 < stock_qty <= LOW_STOCK_THRESHOLD
+// 'out' = stock_qty <= 0
 $query = "SELECT p.*, c.name AS category_name FROM product p
           JOIN category c ON p.category_id = c.id
           WHERE (p.name LIKE ? OR p.id LIKE ?)
           AND (p.category_id = ? OR ?)
           AND (
               ? = ''
-              OR (? = 'in' AND p.stock_qty > 0)
+              OR (? = 'in'  AND p.stock_qty > ?)
+              OR (? = 'low' AND p.stock_qty > 0 AND p.stock_qty <= ?)
               OR (? = 'out' AND p.stock_qty <= 0)
           )
           ORDER BY $sort $dir";
 
-$params = ["%$keyword%", "%$keyword%", $category_id, $category_id == '', $stock, $stock, $stock];
+$params = [
+    "%$keyword%", "%$keyword%", $category_id, $category_id == '',
+    $stock,
+    $stock, LOW_STOCK_THRESHOLD,
+    $stock, LOW_STOCK_THRESHOLD,
+    $stock,
+];
 
 $p = new SimplePager($query, $params, 10, $page);
 $arr = $p->result;
 
 // Query string used to keep the current search/filter state on sort & pager links
 $qs = 'keyword=' . urlencode($keyword) . "&category_id=$category_id&stock=$stock";
+
+// Low stock summary (for the alert banner)
+$low_count = (int) $_db->query('
+    SELECT COUNT(*) FROM product
+    WHERE stock_qty > 0 AND stock_qty <= ' . LOW_STOCK_THRESHOLD
+)->fetchColumn();
 
 // ----------------------------------------------------------------------------
 
@@ -74,6 +90,12 @@ include '../../_head.php';
     <button data-get="insert.php">Insert Product</button>
 </p>
 
+<?php if ($low_count > 0): ?>
+    <p class="alert-low">
+        ⚠ <?= $low_count ?> product(s) are running low on stock (≤ <?= LOW_STOCK_THRESHOLD ?> units left).
+    </p>
+<?php endif ?>
+
 <form class="form">
     <label for="keyword">Keyword</label>
     <?= html_search('keyword', 'placeholder="Product Name / Id"') ?>
@@ -84,7 +106,7 @@ include '../../_head.php';
     <span></span>
 
     <label for="stock">Stock</label>
-    <?= html_select('stock', ['in' => 'In Stock', 'out' => 'Out of Stock'], 'All') ?>
+    <?= html_select('stock', ['in' => 'In Stock', 'low' => 'Low Stock', 'out' => 'Out of Stock'], 'All') ?>
     <span></span>
 
     <input type="hidden" name="sort" value="<?= $sort ?>">
@@ -115,7 +137,7 @@ include '../../_head.php';
         <td><?= encode($row->description) ?></td>
         <td><?= number_format($row->unit_price, 2) ?></td>
         <td><?= $row->stock_qty ?></td>
-        <td><?= $row->stock_qty > 0 ? 'In Stock' : 'Out of Stock' ?></td>
+        <td><?= stock_badge($row->stock_qty) ?></td>
         <td>
             <button data-get="update.php?id=<?= $row->id ?>">Update</button>
             <img src="/prod_photos/<?= $row->photo ?>" class="popup">

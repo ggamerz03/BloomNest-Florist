@@ -99,6 +99,10 @@ include '../_head.php';
         font-size: 0.9em;
         color: #555;
         margin-top: 4px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
     }
 
     .product .add-cart {
@@ -216,7 +220,14 @@ include '../_head.php';
                 <div class="name"><?= encode($prod->name) ?></div>
                 <div class="price">RM <?= number_format($prod->unit_price, 2) ?></div>
                 <div class="stock">
-                    <?= $prod->stock_qty > 0 ? "{$prod->stock_qty} in stock" : 'Out of stock' ?>
+                    <?php if ($prod->stock_qty > 0): ?>
+                        <?= $prod->stock_qty ?> in stock
+                        <?php if (stock_status($prod->stock_qty) == 'low'): ?>
+                            <span class="badge badge-low">Low Stock</span>
+                        <?php endif ?>
+                    <?php else: ?>
+                        <span class="badge badge-out">Out of Stock</span>
+                    <?php endif ?>
                 </div>
             </div>
 

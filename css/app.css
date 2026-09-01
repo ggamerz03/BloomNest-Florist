@@ -352,3 +352,39 @@ label.upload img {
     object-fit: cover;
     cursor: pointer;
 }
+
+/* Stock badges -------------------------------------------------------------- */
+
+.badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.badge-ok {
+    color: var(--sage-dark);
+    background: #e6efe3;
+}
+
+.badge-low {
+    color: #8a5a00;
+    background: #fff1cc;
+}
+
+.badge-out {
+    color: #7a1f1f;
+    background: #fbe0e0;
+}
+
+/* Low stock alert banner (admin listing summary) */
+.alert-low {
+    padding: 10px 15px;
+    background: #fff1cc;
+    border: 1px solid #e0b84d;
+    border-radius: 5px;
+    color: #8a5a00;
+    font-weight: bold;
+}

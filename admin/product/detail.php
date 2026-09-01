@@ -24,6 +24,10 @@ $_title = 'Product | Detail';
 include '../../_head.php';
 ?>
 
+<?php if (stock_status($p->stock_qty) == 'low'): ?>
+    <p class="alert-low">⚠ This product is running low on stock. Consider restocking soon.</p>
+<?php endif ?>
+
 <table class="table detail">
     <tr>
         <th>Id</th>
@@ -55,7 +59,7 @@ include '../../_head.php';
     </tr>
     <tr>
         <th>Status</th>
-        <td><?= $p->stock_qty > 0 ? 'In Stock' : 'Out of Stock' ?></td>
+        <td><?= stock_badge($p->stock_qty) ?></td>
     </tr>
     <tr>
         <th>Photo</th>

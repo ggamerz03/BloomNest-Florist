@@ -63,7 +63,15 @@ include '../_head.php';
     <tr><th>Name</th><td><?= encode($p->name) ?></td></tr>
     <tr><th>Description</th><td><?= encode($p->description) ?></td></tr>
     <tr><th>Price</th><td>RM <?= number_format($p->unit_price, 2) ?></td></tr>
-    <tr><th>Stock</th><td><?= $p->stock_qty ?> available</td></tr>
+    <tr>
+        <th>Stock</th>
+        <td>
+            <?= $p->stock_qty ?> available
+            <?php if (stock_status($p->stock_qty) == 'low'): ?>
+                <span class="badge badge-low">Low Stock</span>
+            <?php endif ?>
+        </td>
+    </tr>
     <tr>
         <th>Unit</th>
         <td>
@@ -105,7 +113,7 @@ include '../_head.php';
 </table>
 
 <p>
-    <button data-get="product_list.php">List</button>
+    <button data-get="product_list.php">Back to List</button>
     <?php if ($_user): ?>
     <button data-get="cart.php">View Cart</button>
     <?php endif ?>
