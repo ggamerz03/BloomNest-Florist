@@ -23,7 +23,7 @@ if (is_post()) {
         $_SESSION['user']->state        = $state;
         $_SESSION['user']->postcode     = $postcode;
         temp('info', 'Address saved');
-        redirect('profile.php');
+        redirect('/cart/checkout.php');
     }
 }
 
